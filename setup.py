@@ -14,7 +14,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='django-testbox',
-    version='0.0.1',
+    version='0.0.2',
     description='Testing tools for Django projects',
     long_description=long_description,
     url='https://github.com/mtirsel/django-testbox',
@@ -27,5 +27,6 @@ setup(
         'Programming Language :: Python :: 3.4',
     ],
     keywords='django testing development',
+    packages=find_packages(),
     install_requires=['django', 'selenium']
 )
