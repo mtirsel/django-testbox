@@ -1,6 +1,7 @@
 
 from django.conf import settings
 from django.contrib.auth import BACKEND_SESSION_KEY
+from django.contrib.auth import HASH_SESSION_KEY
 from django.contrib.auth import SESSION_KEY
 from django.contrib.sessions.backends.db import SessionStore
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -74,6 +75,7 @@ class SeleniumTestCase(StaticLiveServerTestCase):
         session = SessionStore()
         session[SESSION_KEY] = user.pk
         session[BACKEND_SESSION_KEY] = settings.AUTHENTICATION_BACKENDS[0]
+        session[HASH_SESSION_KEY] = user.get_session_auth_hash()
         session.save()
         self.browser.get(self.live_server_url + "/nonexistent-url/")
         self.browser.add_cookie(
