@@ -17,6 +17,7 @@ setup(
     version='0.0.1',
     description='Testing tools for Django projects',
     long_description=long_description,
+    url='https://github.com/mtirsel/django-testbox',
     author='Martin Tiršel',
     author_email='martin.tirsel@gmail.com',
     classifiers=[

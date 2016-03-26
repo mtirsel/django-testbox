@@ -1,0 +1,3 @@
+.pypirc
+dist/
+django_testbox.egg-info/
