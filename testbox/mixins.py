@@ -1,4 +1,6 @@
 
+from importlib import import_module
+from importlib import reload
 from unittest.mock import patch
 
 
@@ -40,3 +42,28 @@ class PatchMultipleMixin(object):
             elif len(item) == 2:
                 attr_name = '_patched_%s' % item[1]
             getattr(self, attr_name).stop()
+
+
+class UndecorateViewMixin(object):
+
+    @classmethod
+    def setUpClass(cls):
+        super(UndecorateViewMixin, cls).setUpClass()
+        cls._patched = []
+        for decorator in cls.patch_decorators:
+            cls._patched.append(patch(decorator, lambda x: x))
+            cls._patched[-1].start()
+
+        view_module_splitted = cls.view.split('.')
+        cls._view_module = import_module('.'.join(view_module_splitted[:-1]))
+        reload(cls._view_module)
+        cls.view_func = staticmethod(
+            getattr(cls._view_module, view_module_splitted[-1])
+        )
+
+    @classmethod
+    def tearDownClass(cls):
+        super(UndecorateViewMixin, cls).tearDownClass()
+        for patched_decorator in cls._patched:
+            patched_decorator.stop()
+        reload(cls._view_module)
