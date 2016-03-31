@@ -51,7 +51,18 @@ class UndecorateViewMixin(object):
         super(UndecorateViewMixin, cls).setUpClass()
         cls._patched = []
         for decorator in cls.patch_decorators:
-            cls._patched.append(patch(decorator, lambda x: x))
+            if len(decorator) == 1:
+                accepts_params = False
+            elif len(decorator) == 2:
+                accepts_params = decorator[1]
+            else:
+                raise ValueError(
+                    "patch_decorators contains incorrect length of items"
+                )
+            if accepts_params:
+                cls._patched.append(patch(decorator[0], lambda x: lambda x: x))
+            else:
+                cls._patched.append(patch(decorator[0], lambda x: x))
             cls._patched[-1].start()
 
         view_module_splitted = cls.view.split('.')
