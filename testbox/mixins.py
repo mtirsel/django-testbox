@@ -2,9 +2,9 @@
 from importlib import import_module
 from importlib import reload
 from unittest.mock import patch
+from unittest.mock import Mock
 
 from django.contrib.auth import get_user_model
-from django.contrib.messages.storage import default_storage
 from django.test import RequestFactory
 
 
@@ -94,5 +94,5 @@ class RequestFactoryMixin(object):
         if self.add_user:
             request.user = get_user_model()()
         if self.add_messages:
-            request._messages = default_storage(request)
+            request._messages = Mock()
         return request
