@@ -3,6 +3,10 @@ from importlib import import_module
 from importlib import reload
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
+from django.contrib.messages.storage import default_storage
+from django.test import RequestFactory
+
 
 class PatchMultipleMixin(object):
     """
@@ -78,3 +82,17 @@ class UndecorateViewMixin(object):
         for patched_decorator in cls._patched:
             patched_decorator.stop()
         reload(cls._view_module)
+
+
+class RequestFactoryMixin(object):
+    add_user = True
+    add_messages = True
+
+    def get_request(self, user=True, method='get', url='/', **params):
+        factory = RequestFactory()
+        request = getattr(factory, method)(url, **params)
+        if self.add_user:
+            request.user = get_user_model()()
+        if self.add_messages:
+            request._messages = default_storage(request)
+        return request
