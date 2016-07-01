@@ -1,8 +1,8 @@
+from importlib import import_module
 
 from django.conf import settings
 from django.contrib.auth import login
 from django.test.client import RequestFactory
-from django.utils.importlib import import_module
 
 
 def client_login(client, user):
